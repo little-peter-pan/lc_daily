@@ -1,0 +1,12 @@
+def lowestCommonAncestor(root, nodes):
+  # DFS to check if current node is in the nodes.
+  # Time: O(n), Space: O(max(h, m)), h is tree height, m is number of nodes.
+  s = set(nodes)
+  def dfs(root):
+    if not root: return
+    if root in s:
+      return root
+    left, right = dfs(root.left), dfs(root.right)
+    return root if left and right else left or right
+  return dfs(root)
+  
