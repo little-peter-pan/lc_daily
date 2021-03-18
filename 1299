@@ -1,0 +1,21 @@
+class Solution(object):
+  def minAvailableDuration(self, slots1, slots2, duration):
+    # sort slots1 and slots2 by start time, compare each pair to see if there is overlap that cover duration, if so, return it; else, update one with earlier end time.
+    # Time: O(nlogn), n is length of longer slot. Space: O(1)
+    slots1.sort(), slots2.sort()
+    i, j = 0, 0
+    while i < len(slots1) and j < len(slots2):
+      l, r = max(slots1[i][0], slots2[j][0]), min(slots1[i][1], slots2[j][1])
+      if l + duration <= r:
+        return [l, l + duration]
+      if slots1[i][1] < slots2[j][1]:
+        i += 1
+      else:
+        j += 1
+    return []
+
+slots1 = [[10,50],[60,120],[140,210]]
+slots2 = [[0,15],[60,70]]
+duration = 12
+s = Solution()
+print(s.minAvailableDuration(slots1, slots2, duration))
