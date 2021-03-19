@@ -1,0 +1,25 @@
+class Solution:
+    def rectangleArea(self, rectangles: List[List[int]]) -> int:
+#         1. Start with largest area that covers all rectangles.
+#         2. For each rectangle, calculate left, right, top, bottom and overlap area with current area.
+#         3. For each left, right, top and bottom area, repeat step 2 with next rectangle.
+#         4. Result will be left + right + top + bottom + overlap area.
+#         Time: O(n), Space: O(n)
+                
+        def get_overlap(r1, c1, r2, c2, x1, y1, x2, y2):
+            return max(0, min(r2, x2) - max(r1, x1)) * max(0, min(c2, y2) - max(c1, y1))
+        
+        def divide(index, rectangles, r1, c1, r2, c2):
+            if index == len(rectangles) or r1 >= r2 or c1 >= c2: return 0
+            x1, y1, x2, y2 = rectangles[index]
+            if x1 >= r2 or y1 >= c2 or x2 <= r1 or y2 <= c1:
+                return divide(index + 1, rectangles, r1, c1, r2, c2)
+            left = divide(index + 1, rectangles, r1, c1, min(x1, r2), c2) if x1 > r1 else 0
+            right = divide(index + 1, rectangles, max(x2, r1), c1, r2, c2) if x2 < r2 else 0
+            top = divide(index + 1, rectangles, max(x1, r1), y2, min(x2, r2), c2) if y2 < c2 else 0
+            bottom = divide(index + 1, rectangles, max(x1, r1), c1, min(x2, r2), y1) if y1 > c1 else 0
+            return left + right + top + bottom + get_overlap(r1, c1, r2, c2, x1, y1, x2, y2)
+        
+        m = list(zip(*rectangles))
+        return divide(0, rectangles, min(m[0]), min(m[1]), max(m[2]), max(m[3])) % (10 ** 9 + 7)
+    
