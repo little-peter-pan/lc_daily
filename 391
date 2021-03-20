@@ -1,0 +1,16 @@
+class Solution:
+    def isRectangleCover(self, rectangles: List[List[int]]) -> bool:
+#         1. design two functions: area is to calculate area for each rectangle, corners is to record four corners and store them as a set.
+#         2. for each rectangle, add area to a, and use XOR to update corners to c (XOR will cancel out overlapping corners, but keep unique corners).
+#         3. calculate area and corners for the bottom-left and top-right corners in all rectangles.
+#         4. compare if a and c from step 2 are equal to area and corners from step 3.
+#         Time: O(n), Space: O(n)
+        
+        a, c = 0, set()
+        area, corners = lambda: (x2 - x1) * (y2 - y1), lambda: {(x1, y1), (x1, y2), (x2, y1), (x2, y2)}
+        for x1, y1, x2, y2 in rectangles:
+            a += area()
+            c ^= corners()
+        x1, y1, x2, y2 = (f(z) for f, z in zip((min, min, max, max), zip(*rectangles)))
+        return a == area() and c == corners()
+    
