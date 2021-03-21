@@ -1,0 +1,25 @@
+class Solution:
+    def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
+#         1. maintain a list of each building's left side as (left, -height, right), and right side as(right, 0, 0) called events, and sort it.
+#         2. maintain a list of result, called res, put first item [0, 0] in it; maintain a min heap of (-height, right), which is in fact a max heap of (height, right), called live.
+#         3. for each tuple in events:
+#          3.1. if it is left side (has -height), push (-height, right) in the live heap;
+#          3.2. check top of live, if its right (live[0][1]) <= current left, it means the current max height should be removed, so pop it from live;
+#          3.3. repeat 3.2 until top of live is on the right side of current left;
+#          3.4. check current height in top of live (live[0][0]), if not equal to res[-1][1], it means we need to add current left and height into result.
+#         4. the result will be res[1:].
+#         Time: O(nlogn), Space: O(n)
+        
+        events = [(L, -H, R) for L, R, H in buildings]
+        events += list({(R, 0, 0) for _, R, _ in buildings})
+        events.sort()
+        res = [[0, 0]]
+        live = [(0, float('inf'))]
+        for L, negH, R in events:
+            if negH: heappush(live, (negH, R))
+            while live[0][1] <= L:
+                heappop(live)
+            if res[-1][1] != -live[0][0]:
+                res += [[L, -live[0][0]]]
+        return res[1:]
+    
