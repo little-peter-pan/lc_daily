@@ -1,0 +1,29 @@
+class Solution:
+    def findLengthOfShortestSubarray(self, arr: List[int]) -> int:
+#         1. first, use two pointers (l and r) to find the index of left-most decreasing start position and right-most decreasing end position;
+#         2. record result as min of removing everything after l (len(arr) - l - 1) and removing everything before r (r);
+#         3. there is another possible answer: to remove middle part and keep left and right non-decreasing, to do that:
+#                 3.1. start from index = 0 to l:
+#                 3.2. compare arr[i] and arr[r]:
+#                     if arr[i] <= arr[r], update res with min(res, r - i - 1)
+#                     else: if r < len(arr) - 1: r += 1
+#                           if r == len(arr) - 1: break
+#         4. return result.
+#         Time: O(n), Space: O(1)
+        
+        l, r = 0, len(arr) - 1
+        while l < r and arr[l] <= arr[l + 1]:
+            l += 1
+        if l == r: return 0
+        while r > 0 and arr[r] >= arr[r - 1]:
+            r -= 1
+        res = min(len(arr) - l - 1, r)
+        for i in range(l + 1):
+            if arr[i] <= arr[r]:
+                res = min(res, r - i - 1)
+            elif r < len(arr) - 1:
+                r += 1
+            else:
+                break
+        return res
+    
