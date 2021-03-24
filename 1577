@@ -1,0 +1,24 @@
+class Solution:
+    def numTriplets(self, nums1: List[int], nums2: List[int]) -> int:
+        # 1. for each number in nums1 and nums2, calculate square value and store counts in dic1 and dic2;
+        # 2. calculate product of every two numbers in nums1, if the product is in dic2, add dic2[product] to result;
+        # 3. repeat step 2 for every two numbers in nums2 and dic1;
+        # 4. return result.
+        # Time: O(N**2 + M**2), N and M are size of nums1 and nums2, Space: O(N+M)
+        dic1, dic2 = defaultdict(int), defaultdict(int)
+        for i in nums1:
+            dic1[i * i] += 1
+        for i in nums2:
+            dic2[i * i] += 1
+        
+        def helper(dic, lst):
+            res = 0
+            for i in range(len(lst)):
+                for j in range(i + 1, len(lst)):
+                    target = lst[i] * lst[j]
+                    if target in dic:
+                        res += dic[target]
+            return res
+        
+        return helper(dic1, nums2) + helper(dic2, nums1)
+    
