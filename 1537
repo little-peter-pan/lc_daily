@@ -1,0 +1,25 @@
+class Solution:
+    def maxSum(self, nums1: List[int], nums2: List[int]) -> int:
+        # 1. use two pointers, i and j, and start from beginning of two arrays;
+        # 2. compare nums1[i] and nums2[j]:
+        #     2.1. if nums1[i] == nums2[j]: record maximum of num1 (sum1) and nums2 (sum2) as max(sum1, sum2) + current value, and update i += 1 and j += 1;
+        #     2.2. elif nums1[i] < nums2[j]: update sum1 += nums1[i], and update i += 1;
+        #     2.3. else: update sum2 += nums2[j], and update j += 1;
+        #     2.4. when nums1 is longer, can be combined with 2.2, similarly, nums2 is longer with 2.3;
+        # 3. result will be max(sum1, sum2) % mod
+        # Time: O(n), n is longer length in num1 and nums2, Space: O(1)
+                
+        i, j, l1, l2, sum1, sum2, mod = 0, 0, len(nums1), len(nums2), 0, 0, 10 ** 9 + 7
+        while i < l1 or j < l2:
+            if i < l1 and (j == l2 or nums1[i] < nums2[j]):
+                sum1 += nums1[i]
+                i += 1
+            elif j < l2 and (i == l1 or nums1[i] > nums2[j]):
+                sum2 += nums2[j]
+                j += 1
+            else:
+                sum1 = sum2 = max(sum1, sum2) + nums1[i]
+                i += 1
+                j += 1
+        return max(sum1, sum2) % mod
+        
