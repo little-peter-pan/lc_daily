@@ -1,0 +1,31 @@
+class Solution:
+    def maximumScore(self, nums: List[int], k: int) -> int:
+        # 1. calculate the running minimum of nums[:k + 1] and nums[k:], respectively, and store in left and right;
+        # 2. for each position (j) in right, we need to find the smallest possible position (i) in left, so that left[i] >= right[j], which can use bisect_left to find the longest left array. If we can find it, update result with max(res, (k + j - i + 1) * right[j]);
+        # 3. repeat step 2 with each position in left, find longest right array.
+        # 4. return result.
+        # Time: O(nlogn), Space: O(n)
+    
+        def helper(nums, k):
+            left = list(accumulate(nums[:k + 1][::-1], min))[::-1]
+            right = list(accumulate(nums[k:], min))
+            res = 0
+            for j in range(len(right)):
+                i = bisect_left(left, right[j])
+                if i >= 0:
+                    res = max(res, (k + j - i + 1) * right[j])
+            return res
+        
+        return max(helper(nums, k), helper(nums[::-1], len(nums) - k - 1))
+    
+#         res = mini = nums[k]
+#         i, j, n = k, k, len(nums)
+#         while i > 0 or j < n - 1:
+#             if (nums[i - 1] if i else 0) < (nums[j + 1] if j < n - 1 else 0):
+#                 j += 1
+#             else:
+#                 i -= 1
+#             mini = min(mini, nums[i], nums[j])
+#             res = max(res, mini * (j - i + 1))
+#         return res
+    
