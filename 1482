@@ -1,0 +1,28 @@
+class Solution:
+    def minDays(self, bloomDay: List[int], m: int, k: int) -> int:
+        # 1. binary search for the minimum days to make bouquets, set left and right with 1 and max(bloomDay);
+        # 2. for each mid, check if there are enough flowers that can bloom and also make m bouquets as follows:
+        #     set flower and bouquet = 0, for each d in bloomDay:
+        #     2.1. if d <= mid: flower + 1, else: flower = 0;
+        #     2.2. if flower == k; flower = 0, bouquet += 1, if bouquet == m: break
+        # 3. if bouquet == m, set right = mid, else: set left = mid + 1
+        # 4. return left as result
+        # Time: O(nlog(max(bloomDay))), Space: O(1)
+        
+        if m * k > len(bloomDay): return -1
+        left, right = 1, max(bloomDay)
+        while left < right:
+            mid = (left + right) >> 1
+            flower = bouquet = 0
+            for d in bloomDay:
+                flower = 0 if d > mid else flower + 1
+                if flower == k:
+                    flower = 0
+                    bouquet += 1
+                    if bouquet == m: break
+            if bouquet == m:
+                right = mid
+            else:
+                left = mid + 1
+        return left
+    
