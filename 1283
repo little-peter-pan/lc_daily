@@ -1,0 +1,22 @@
+class Solution:
+    def smallestDivisor(self, nums: List[int], threshold: int) -> int:
+#         1. binary search to find result, the range is [1, max(nums)];
+#         2. for each mid point:
+#             2.1. compute sum of division as (n-1)//x+1 in nums;
+#             2.2. if sum <= threshold: right = mid;
+#             2.3. else left = mid + 1;
+#         3. return left as result.
+#         Time: O(nlog(max(nums))), Space: O(1)
+        
+        compute_sum = lambda x : sum([(n - 1) // x + 1 for n in nums])
+        
+        left, right = 1, max(nums)
+        while left < right:
+            mid = (left + right) >> 1
+            n = compute_sum(mid)
+            if n <= threshold:
+                right = mid
+            else:
+                left = mid + 1
+        return left
+    
