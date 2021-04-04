@@ -1,0 +1,15 @@
+def maximizeSweetness(sweetness, k):
+# binary search, Time: O(nlog(sum//(k+1)-min)), Space: O(1)
+  l, r = min(sweetness), sum(sweetness) // (k + 1)
+  while l < r:
+    mid = (l + r) >> 1
+    tmp, cnt = 0, 0
+    for i in sweetness:
+      tmp += i
+      if tmp > mid:
+        cnt += 1
+        tmp = 0
+    if cnt < k + 1:
+      r = mid
+    else: l = mid + 1
+  return l
