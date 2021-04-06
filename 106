@@ -1,0 +1,32 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode:
+        # build tree recursively using two arrays.
+        # 1. get root node and its index in inorder from postorder.pop() and inorder.index();
+        # 2. build left and right subtrees with inorder[:index], and inorder[index + 1:]
+        # Time: O(nh), h is height of recursion tree, Space: O(h).
+        
+        if inorder:
+            idx = inorder.index(postorder.pop())
+            root = TreeNode(inorder[idx])
+            
+            root.right = self.buildTree(inorder[idx + 1:], postorder)
+            root.left = self.buildTree(inorder[:idx], postorder)
+            return root
+            
+#         2. recursion without index
+        
+#         def dfs(stop):
+#             if postorder and inorder[-1] != stop:
+#                 root = TreeNode(postorder.pop())
+#                 root.right = dfs(root.val)
+#                 inorder.pop()
+#                 root.left = dfs(stop)
+#                 return root
+#         inorder, postorder = inorder[:], postorder[:]
+#         return dfs(None)
