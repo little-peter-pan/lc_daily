@@ -1,0 +1,21 @@
+class Solution:
+    def isValidSerialization(self, preorder: str) -> bool:
+#         Count all the nodes (including null nodes) on the run, and check if it can form a tree;
+#         1. start with 1 null node (n = 1);
+#         2. for each p in preorder list:
+#             2.1. check if n == 0, it means we can create a complete tree now, but there is more in preorder, so return False;
+#             2.2. if p is not '#', it takes one position, but also creates two more positions, so in total n += 1;
+#             2.3. if p is '#', it takes one position, so n -= 1;             
+#         3. finally, check if n == 0.
+#         Time: O(n), Space: O(n).
+                
+        l = preorder.split(',')
+        n = 1
+        for p in l:
+            if n == 0: return False
+            if p == '#':
+                n -= 1
+            else:
+                n += 1
+        return n == 0
+    
