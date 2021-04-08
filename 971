@@ -1,0 +1,41 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def flipMatchVoyage(self, root: TreeNode, voyage: List[int]) -> List[int]:
+#         DFS search to check each node in voyage to see if it is correct value and if it needs to be flipped.
+#         1. create a flipped list to store result, an index to store current index.
+#         2. in dfs search:
+#             2.1. if node.val is not voyage[i], the total tree cannot be matched, set flipped to [-1];
+#             2.2. i += 1 to start dealing with child nodes;
+#             2.3. if i in voyage length, and node.left exists, but node.left.val is not voyage[i], it means we may need to flip it to the right child, so we append node.val to flipped, and do dfs(node.right) to check, and then dfs(node.left);
+#             2.4. else, do dfs(node.left) and then dfs(node.right);
+#         3. after dfs, check if flipped[0] is -1, set flipped to [-1]
+#         4. return flipped as result.
+#         Time: O(n), Space: O(h), h is height of recursion tree.
+                
+        self.flipped = []
+        self.i = 0
+        
+        def dfs(node):
+            if node:
+                if node.val != voyage[self.i]:
+                    self.flipped = [-1]
+                    return
+                self.i += 1
+                if self.i < len(voyage) and node.left and node.left.val != voyage[self.i]:
+                    self.flipped.append(node.val)
+                    dfs(node.right)
+                    dfs(node.left)
+                else:
+                    dfs(node.left)
+                    dfs(node.right)
+            
+        dfs(root)
+        if self.flipped and self.flipped[0] == -1:
+            self.flipped = [-1]
+        return self.flipped
+    
