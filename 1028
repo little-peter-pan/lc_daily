@@ -1,0 +1,39 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def recoverFromPreorder(self, S: str) -> TreeNode:
+#         1. keep a stack to construct tree, an index to record position;
+#         2. while index is in len(S), record level and value:
+#             2.1. if S[i] is '-': level += 1, i += 1;
+#             2.2. if not: val += S[i], i += 1
+#             2.3. check if len(stack) > level: it means the last node level >= current node level, so stack.pop();
+#             2.4. if stack and stack[-1].left is empty, add node to its left;
+#             2.5. else: add to its right;
+#             2.6. add node to stack;
+#         3. return stack[0] as result.
+#         Time: O(n), Space: O(n)
+            
+        stack, i = [], 0
+        while i < len(S):
+            level, val = 0, ''
+            while i < len(S) and S[i] == '-':
+                level += 1
+                i += 1
+            while i < len(S) and S[i] != '-':
+                val += S[i]
+                i += 1
+            while len(stack) > level:
+                stack.pop()
+            node = TreeNode(val)
+            if stack:
+                if not stack[-1].left:
+                    stack[-1].left = node
+                else:
+                    stack[-1].right = node
+            stack.append(node)
+        return stack[0]
+    
