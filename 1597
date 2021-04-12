@@ -1,0 +1,27 @@
+class Solution():
+  def expTree(self, s):
+    def compute(opd, opr):
+      right, left = opd.pop(), opd.pop()
+      opd.append(Node(val = opr.pop(), left = left, right = right))
+  
+    prio = {'+':0, '-':0, '*':1, '/':1}
+    opd, opr, op = [], [], 0
+    for i in range(len(s)):
+      if s[i].isdigit():
+        op = op * 10 + int(s[i])
+        if i == len(s) - 1 or not s[i + 1].isdigit():
+          opd.append(Node(val = str(op)))
+          op = 0
+      elif s[i] == '(':
+        opr.append(s[i])
+      elif s[i] == ')':
+        while opr[-1] != '(':
+          compute(opd, opr)
+        opr.pop()
+      elif s[i] in prio:
+        while opr and opr[-1] in prio and prio[opr[-1]] >= prio[s[i]]:
+          compute(opd, opr)
+        opr.append(s[i])   
+    while opr:
+      compute(opd, opr)
+    return opd[-1]
