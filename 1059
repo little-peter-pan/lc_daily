@@ -1,0 +1,17 @@
+class Solution():
+  def leadsToDestination(self, n, edges, source, destination):
+    from collections import defaultdict
+    def dfs(i):
+      seen.add(i)
+      for j in graph[i]:
+        if j == i or j in seen or not dfs(j):
+          return False
+      seen.discard(i)
+      return len(graph[i]) != 0 or i == destination
+
+    graph = defaultdict(set)
+    seen = set()
+    for s, d in edges:
+      graph[s].add(d)
+    print(graph)
+    return dfs(source)
