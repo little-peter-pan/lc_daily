@@ -1,0 +1,93 @@
+class Block:  # block is doubly-linked list to store count of strings (val), set of strings in each count (keys)
+    def __init__(self, val = 0):
+        self.val = val
+        self.keys = set()
+        self.before = None
+        self.after = None
+        
+    def remove(self):
+        self.before.after = self.after
+        self.after.before = self.before
+        self.before, self.after = None, None
+        
+    def add_after(self, new_block):
+        old_after = self.after
+        self.after = new_block
+        new_block.before = self
+        new_block.after = old_after
+        old_after.before = new_block
+    
+class AllOne:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.begin = Block()  # sentinel begin
+        self.end = Block()  # sentinel end
+        self.begin.after = self.end
+        self.end.before = self.begin
+        self.dic = {}  # keys to block
+
+    def inc(self, key: str) -> None:
+        """
+        Inserts a new key <Key> with value 1. Or increments an existing key by 1.
+        """
+        if not key in self.dic:
+            current_block = self.begin
+        else:
+            current_block = self.dic[key]
+            current_block.keys.remove(key)   
+        if current_block.val + 1 != current_block.after.val:  # insert new_block with val not in block structure
+            new_block = Block(current_block.val + 1)
+            current_block.add_after(new_block)
+        else:
+            new_block = current_block.after
+        new_block.keys.add(key)
+        self.dic[key] = new_block
+        if not current_block.keys and current_block.val != 0:  # delete old block if not sentinel
+            current_block.remove()
+
+    def dec(self, key: str) -> None:
+        """
+        Decrements an existing key by 1. If Key's value is 1, remove it from the data structure.
+        """
+        current_block = self.dic[key]
+        del self.dic[key]
+        current_block.keys.remove(key)
+        if current_block.val != 1:  # if count (val) is already 1, no need to find before block
+            if current_block.val - 1 != current_block.before.val:  # insert new_block with val not in block structure
+                new_block = Block(current_block.val - 1)
+                current_block.before.add_after(new_block)
+            else:
+                new_block = current_block.before
+            new_block.keys.add(key)
+            self.dic[key] = new_block
+        if not current_block.keys:  # delete old block
+            current_block.remove()
+
+    def getMaxKey(self) -> str:
+        """
+        Returns one of the keys with maximal value.
+        """
+        if self.end.before.val == 0: return ''
+        key = self.end.before.keys.pop()  # pop and add back to keys, return one arbitrary key
+        self.end.before.keys.add(key)
+        return key
+
+    def getMinKey(self) -> str:
+        """
+        Returns one of the keys with Minimal value.
+        """
+        if self.begin.after.val == 0: return ''
+        key = self.begin.after.keys.pop()
+        self.begin.after.keys.add(key)
+        return key
+
+
+# Your AllOne object will be instantiated and called as such:
+# obj = AllOne()
+# obj.inc(key)
+# obj.dec(key)
+# param_3 = obj.getMaxKey()
+# param_4 = obj.getMinKey()
