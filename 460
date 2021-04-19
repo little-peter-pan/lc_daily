@@ -1,0 +1,41 @@
+class LFUCache:
+
+    def __init__(self, capacity: int):
+        self._items = defaultdict(int)  # {key: freq}
+        self._freqs = defaultdict(OrderedDict)  # {freq: {key: val}}
+        self.size = capacity
+        self._minFreq = 0
+    
+    def _update_freq(self, key, value = None):
+        f = self._items[key]
+        v = self._freqs[f].pop(key)
+        if value:
+            v = value
+        self._freqs[f + 1][key] = v
+        self._items[key] += 1
+        if self._minFreq == f and not self._freqs[f]:
+            self._minFreq += 1
+        return v
+
+    def get(self, key: int) -> int:
+        if key not in self._items:
+            return -1
+        return self._update_freq(key)
+
+    def put(self, key: int, value: int) -> None:
+        if not self.size: return
+        if key in self._items:
+            self._update_freq(key, value)
+        else:
+            if len(self._items) == self.size:
+                self._items.pop(self._freqs[self._minFreq].popitem(last = False)[0])
+            self._minFreq = 1
+            self._items[key] = 1
+            self._freqs[1][key] = value
+        
+
+
+# Your LFUCache object will be instantiated and called as such:
+# obj = LFUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
