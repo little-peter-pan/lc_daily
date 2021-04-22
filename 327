@@ -1,0 +1,38 @@
+class Solution:
+    def countRangeSum(self, nums: List[int], lower: int, upper: int) -> int:
+        n = len(nums)
+        Sum, Tree = [0] * (n + 1), [0] * (n + 2)  # Create a preSum array, and a binary index tree (BIT).
+        
+        def count(x):  # Get counts of x in BIT
+            res = 0
+            while x:
+                res += Tree[x]
+                x -= x & -x
+            return res
+        
+        def update(x):  # Update x in BIT
+            while x <= n + 1:
+                Tree[x] += 1
+                x += x & -x
+        
+        for i in range(n):
+            Sum[i + 1] = Sum[i] + nums[i] 
+        res, sortSum = 0, sorted(Sum)
+        for s in Sum:
+            cnt = count(bisect.bisect_right(sortSum, s - lower)) - count(bisect.bisect_left(sortSum, s - upper))
+            res += cnt
+            update(bisect.bisect_left(sortSum, s) + 1)
+        return res
+    
+            
+        # Brute force, TLE
+        # Sum = [0]
+        # for n in nums:
+        #     Sum.append(Sum[-1] + n)
+        # res, n = 0, len(Sum)
+        # for j in range(n):
+        #     for i in range(j):
+        #         if lower <= Sum[j] - Sum[i] <= upper: res += 1
+        # return res
+        
+        
