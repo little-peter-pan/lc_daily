@@ -1,0 +1,49 @@
+class Tree:  # Creat a BIT
+    def __init__(self, n):
+        self.size = n + 1
+        self.sums = [0] * self.size
+        
+    def get(self, i):
+        res = 0
+        while i > 0:
+            res += self.sums[i]
+            i -= i & -i
+        return res
+    
+    def update(self, i, v):
+        while i < self.size:
+            self.sums[i] += v
+            i += i & -i
+        
+class Solution:
+    def reversePairs(self, nums: List[int]) -> int:
+        new_nums = nums + [x * 2 for x in nums]
+        sorted_set = sorted(list(set(new_nums)))  # Get all possible numbers
+        tree = Tree(len(sorted_set))
+
+        rank = {}
+        res = 0
+        for i, n in enumerate(sorted_set):
+            rank[n] = i + 1
+
+        for n in nums[::-1]:
+            res += tree.get(rank[n] - 1)
+            tree.update(rank[n * 2], 1)
+        return res
+    
+        
+#         Brute force, O(n2)
+#         res, n = 0, len(nums)
+#         two = [0] * n
+#         for i in range(n):
+#             two[n - i - 1] = 2 * nums[i]
+#         print(nums, two)
+#         for j in range(n):
+#             t = two[j]
+#             for k in nums[:n - j - 1]:
+#                 # print(k,t)
+#                 if k > t:
+#                     res += 1
+            
+#             # print(j, res, nums[:n - j - 1], two[::-1][j])
+#         return res
