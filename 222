@@ -1,0 +1,58 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countNodes(self, root: TreeNode) -> int:
+        left = self.get(root, True)
+        right = self.get(root, False)
+        if left == right:
+            return 2 ** left - 1
+        else:
+            return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+    
+    def get(self, node, isLeft):
+        if not node: return 0
+        if isLeft:
+            return 1 + self.get(node.left, isLeft)
+        else:
+            return 1 + self.get(node.right, isLeft)
+        
+        
+        '''
+        #1: level traversal
+        
+        if not root: return 0
+        queue, count = [root], 1
+        while queue:
+            root = queue[0]
+            if root.left:
+                queue.append(root.left)
+                count += 1
+            if root.right:
+                queue.append(root.right)
+                count += 1
+            queue.pop(0)
+        return count
+        
+        #2: in-order traversal
+        
+        if not root: return 0
+        count = [0]
+        def inOrder(root, count):
+            count[0] += 1
+            if root.left:
+                inOrder(root.left, count)
+            if root.right:
+                inOrder(root.right, count)
+            return
+        inOrder(root, count)
+        return count[0]
+        
+        #3: recursive
+        
+        if not root: return 0
+        return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+        '''
