@@ -1,0 +1,48 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def pathSum(self, root: TreeNode, sum: int) -> int:        
+#         DFS with a dictionary recording preSum.
+#         For each node, do:
+#             1. if not node, return
+#             2. calculate curSum = preSum + root.val
+#             3. if curSum - sum in dic: add dic[curSum - sum] to result
+#             4. if curSum in dic: update dic[curSum] += 1; else add dic[curSum] = 1
+#         Do recursion for root.left and root.right, remember to dic[curSum] -= 1 before start another branch.
+#         Time: O(n), Space: O(n)
+        
+        def dfs(root, preSum, sum):
+            if not root:
+                return
+            curSum = preSum + root.val
+            if curSum - sum in dic:
+                self.count += dic[curSum - sum]
+            if curSum in dic:
+                dic[curSum] += 1
+            else:
+                dic[curSum] = 1
+            dfs(root.left, curSum, sum)
+            dfs(root.right, curSum, sum)
+            dic[curSum] -= 1
+            
+        self.count = 0
+        dic = {0:1}
+        dfs(root, 0, sum)
+        return self.count
+    
+
+        
+#         1. Brutal force, O(n**2)
+        
+#         def find_path(root, target):
+#             if root:
+#                 return int(root.val == target) + find_path(root.left, target - root.val) + find_path(root.right, target - root.val)
+#             return 0
+        
+#         if root:
+#             return find_path(root, sum) + self.pathSum(root.left, sum) + self.pathSum(root.right, sum)
+#         return 0
