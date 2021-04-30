@@ -1,0 +1,26 @@
+class Solution():
+    def pathSum(self, nums):
+      # Create a dic to store {path : sum of path}, and a set to contain all leaf nodes.
+      # for each number:
+      #   1. get path and value by num // 10 and num % 10;
+      #   2. get level and sequence in level by path // 10, path % 10;
+      #   3. get parent path by (level - 1) * 10 + (sequence + 1) // 2;
+      #   4. update dic with dic[path] = dic[parent] + val;
+      #   5. add path to leaf set;
+      #   6. if parent in leaf set, it is not now and remove it.
+      # At the end, sum of all dic[leaf] is the result.
+      # Time: O(n), Space: O(n)
+
+        dic = {1:0}
+        leaves = set()
+        for num in nums:
+            path, val = num // 10, num % 10
+            lvl, seq = path // 10, path % 10
+            parent = (lvl - 1) * 10 + (seq + 1) // 2
+            dic[path] = dic[parent] + val
+            leaves.add(path)
+            if parent in leaves: leaves.remove(parent)
+        return sum(dic[v] for v in leaves)
+
+s = Solution()
+print(s.pathSum([113, 215, 221, 314, 325]))
