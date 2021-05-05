@@ -1,0 +1,28 @@
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        Greedy with BFS
+        size = len(nums)
+        dest = size - 1
+        cur_cov, last_idx = 0, 0
+        jump_cnt = 0
+        if size == 1: return 0
+        for i in range(size):
+            cur_cov = max(cur_cov, i + nums[i])
+            if i == last_idx:
+                last_idx = cur_cov
+                jump_cnt += 1
+                if cur_cov >= dest:
+                    return jump_cnt
+        return jump_cnt
+    
+#         DP with BFS
+#         n = len(nums)
+#         dp = [0] * n
+#         for i in range(1, n):
+#             idx = 0
+#             while idx < n and idx + nums[idx] < i:
+#                 idx += 1
+#             dp[i] = dp[idx] + 1
+#         print(dp)
+#         return dp[n - 1]
+        
