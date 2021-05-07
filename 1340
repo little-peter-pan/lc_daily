@@ -1,0 +1,30 @@
+class Solution:
+    def maxJumps(self, arr: List[int], d: int) -> int:
+        # n = len(arr)
+        # dp = [1] * n
+        # for a, i in sorted([a, i] for i, a in enumerate(arr)):
+        #     for di in [-1, 1]:
+        #         for j in range(i + di, i + d * di + di, di):
+        #             if not (0 <= j < n and arr[j] < arr[i]): break
+        #             dp[i] = max(dp[i], dp[j] + 1)
+        # # print(dp)
+        # return max(dp)
+    
+        n = len(arr)
+        dp = [1] * (n + 1)
+        stack = []
+        for i, a in enumerate(arr + [float('inf')]):
+            # print(i, a)
+            while stack and arr[stack[-1]] < a:
+                L = [stack.pop()]
+                while stack and arr[stack[-1]] == arr[L[0]]:
+                    L.append(stack.pop())
+                for j in L:
+                    if i - j <= d:
+                        dp[i] = max(dp[i], dp[j] + 1)
+                    if stack and j - stack[-1] <= d:
+                        dp[stack[-1]] = max(dp[stack[-1]], dp[j] + 1)
+                # print(stack, L, dp)
+            stack.append(i)
+            # print('1', stack, dp)
+        return max(dp[:-1])
