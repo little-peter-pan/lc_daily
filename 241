@@ -1,0 +1,36 @@
+class Solution:
+    def diffWaysToCompute(self, input: str) -> List[int]:
+#         memo = {}
+#         return self.dfs(expression, memo)
+    
+#     def dfs(self, input, memo):
+#         if input in memo:
+#             return memo[input]
+#         if input.isdigit():
+#             memo[input] = int(input)
+#             return [int(input)]
+#         ret = []
+#         for i, c in enumerate(input):
+#             if c in '+-*':
+#                 l = self.diffWaysToCompute(input[:i])
+#                 r = self.diffWaysToCompute(input[i + 1:])
+#                 ret.extend(eval(str(x) + c + str(y)) for x in l for y in r)
+#         memo[input] = ret
+#         return ret
+    
+        if input.isdigit():
+            return [int(input)]
+        res = []
+        for i in range(len(input)):
+            if input[i] in "-+*":
+                left = self.diffWaysToCompute(input[:i])
+                right = self.diffWaysToCompute(input[i + 1:])
+                for l in left:
+                    for r in right:
+                        if input[i] == '+':
+                            res.append(l + r)
+                        elif input[i] == '-':
+                            res.append(l - r)
+                        elif input[i] == '*':
+                            res.append(l * r)
+        return res
