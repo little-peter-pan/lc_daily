@@ -1,0 +1,24 @@
+class Solution:
+    def checkValidString(self, s: str) -> bool:
+        '''
+        for each position, calculate lowest and highest possible number of )s needed to pair with current situation.
+        lo and hi = 0
+        for c in s,
+        if c is (, lo++, else, lo--
+        if c is not ), hi++, else, hi--
+        if hi < 0, which means current ) is more than (, return False
+        for lo number, it needs to be >= 0 [eg. (*), ***))), etc.], so lo = max(lo, 0)
+        finally, check if lo == 0 (cannot be <= 0, [eg. **((*])
+        '''
+        
+        lo = hi = 0
+        for c in s:
+            lo += 1 if c == '(' else -1
+            hi += 1 if c != ')' else -1
+            if hi < 0:
+                return False
+            lo = max(lo, 0)
+
+        return lo == 0
+        
+        
