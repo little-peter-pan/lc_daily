@@ -1,0 +1,32 @@
+class Solution:
+    def removeInvalidParentheses(self, s: str) -> List[str]:
+        self.res = set()
+        left_rem = right_rem = 0
+        for i in range(len(s)):
+            if s[i] == '(':
+                left_rem += 1
+            elif s[i] == ')':
+                if left_rem: left_rem -= 1
+                else: right_rem += 1
+        
+        def bt(s, i, left, right, left_rem, right_rem, path):
+            # print(s, i)
+            if i == len(s):
+                if left_rem == 0 and right_rem == 0:
+                    self.res.add(path)
+            else:
+                if s[i] == '(' and left_rem > 0:
+                    bt(s, i + 1, left, right, left_rem - 1, right_rem, path)
+                elif s[i] == ')' and right_rem > 0:
+                    bt(s, i + 1, left, right, left_rem, right_rem - 1, path)
+                path += s[i]
+                if s[i] != '(' and s[i] != ')':
+                    bt(s, i + 1, left, right, left_rem, right_rem, path)
+                elif s[i] == '(':
+                    bt(s, i + 1, left + 1, right, left_rem, right_rem, path)
+                elif left > right:
+                    bt(s, i + 1, left, right + 1, left_rem, right_rem, path)
+                path = path[:-1]
+        
+        bt(s, 0, 0, 0, left_rem, right_rem, '')
+        return self.res
