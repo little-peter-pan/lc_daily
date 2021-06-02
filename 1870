@@ -1,0 +1,11 @@
+class Solution:
+    def minSpeedOnTime(self, dist: List[int], hour: float) -> int:
+        lo, hi, n = 1, 10 ** 7 + 1, len(dist)
+        while lo < hi:
+            mid = (lo + hi) >> 1
+            cur = dist[-1] / mid + sum((dist[i] + mid - 1) // mid for i in range(n - 1))
+            if cur > hour:
+                lo = mid + 1
+            else:
+                hi = mid
+        return -1 if lo == 10 ** 7 + 1 else lo
