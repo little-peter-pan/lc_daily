@@ -1,0 +1,13 @@
+class Solution:
+    def maxProfit(self, A: List[int], orders: int) -> int:
+        arr = sorted(Counter(A).items(), reverse = True) + [(0, 0)]
+        res, idx, width = 0, 0, 0
+        while orders > 0:
+            width += arr[idx][1]
+            sell = min(orders, width * (arr[idx][0] - arr[idx + 1][0]))
+            whole, remainder = divmod(sell, width)
+            res += width * (whole * (arr[idx][0] + arr[idx][0] - whole + 1)) // 2 + \
+                   remainder * (arr[idx][0] - whole)
+            orders -= sell
+            idx += 1
+        return res % (10 **9 + 7)
