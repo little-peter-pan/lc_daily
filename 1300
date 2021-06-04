@@ -1,0 +1,16 @@
+class Solution:
+    def findBestValue(self, A: List[int], target: int) -> int:
+#         A.sort(reverse = True)
+#         maxA = A[0]
+#         while A and target >= A[-1] * len(A):
+#             target -= A.pop()
+#         return int(round((target - 0.1) / len(A))) if A else maxA
+    
+        A.sort()
+        cur, n = 0, len(A)
+        for i in range(n):
+            res = round((target - cur) / n)
+            if res < A[i]: return res
+            cur += A[i]
+            n -= 1
+        return A[-1]
