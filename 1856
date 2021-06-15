@@ -1,0 +1,29 @@
+class Solution:
+    def maxSumMinProduct(self, nums: List[int]) -> int:
+        n, ans, mod = len(nums), 0, 10 ** 9 + 7
+        left, stack = [0], [[nums[0], 0]]
+        for i in range(1, n):
+            cur = 0
+            while stack and nums[i] <= stack[-1][0]:
+                cur += stack.pop()[1] + 1
+            stack.append([nums[i], cur])
+            left.append(cur)
+        
+        right, stack = [0], [[nums[-1], 0]]
+        for i in range(n - 2, -1, -1):
+            cur = 0
+            while stack and nums[i] <= stack[-1][0]:
+                cur += stack.pop()[1] + 1
+            stack.append([nums[i], cur])
+            right.append(cur)
+        right.reverse()
+        
+        presum, cur = [0], 0
+        for i in range(n):
+            cur += nums[i]
+            presum.append(cur)
+        
+        for i in range(n):
+            ans = max(ans, nums[i] * (presum[i + right[i] + 1] - presum[i - left[i]]))
+        
+        return ans % mod
