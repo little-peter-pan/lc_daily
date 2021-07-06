@@ -1,0 +1,14 @@
+class Solution:
+    def __init__(self):
+        self.global_max = -float(inf)
+        self.prev_max = 0
+        
+    def maxSubArray(self, nums: List[int]) -> int:
+        for i in range(len(nums)):
+            if self.prev_max < 0:
+                self.prev_max = nums[i]
+            else:
+                self.prev_max = self.prev_max + nums[i]
+            self.global_max = max(self.global_max, self.prev_max)
+        return self.global_max
+    
