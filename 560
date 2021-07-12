@@ -1,0 +1,19 @@
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        '''
+        create a dictionary to store all previous sums and their counts {0: 1} ({0:0}? No, need 1 for the first time when curr_sum - k == 0)
+        for num in nums:
+            1. get curr_sum += num
+            2. look in the dic, if it has {curr_sum-k : any num}, which means there is are (any num) of continuous subarrays from index of curr_sum-k to current position, we update our result += any num
+            3. update dictornary with curr_sum, dic[curr_sum] = dic.get(curr_sum) + 1
+        Time: O(n), Space: worst is to store every num in dic, so O(n)
+        '''
+        dic = {0: 1}
+        curr_sum, res = 0, 0
+        for num in nums:
+            curr_sum += num
+            res += dic.get(curr_sum - k, 0)
+            dic[curr_sum] = dic.get(curr_sum, 0) + 1
+            print(dic)
+        return res
+    
